@@ -1,0 +1,9 @@
+{% extends "root.html" %}
+
+{% block body %}
+    {% for item in words %}
+        <li>
+            {{ item }}
+        </li>
+    {% endfor %}
+{% endblock %}
