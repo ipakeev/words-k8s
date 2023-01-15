@@ -7,7 +7,9 @@ class Word(models.Model):
         verbose_name_plural = "Слова"
 
     original = models.CharField(max_length=128, verbose_name="Оригинал")
-    translation = models.CharField(max_length=128, blank=True, default="", verbose_name="Перевод")
+    translation = models.CharField(
+        max_length=128, blank=True, default="", verbose_name="Перевод"
+    )
 
     def __str__(self) -> str:
         return self.original

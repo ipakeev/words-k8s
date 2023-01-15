@@ -42,10 +42,10 @@ class Command(BaseCommand):
 
     @staticmethod
     def on_message_callback(
-            channel: BlockingChannel,
-            method: Basic.Deliver,
-            properties: BasicProperties,
-            body: bytes,
+        channel: BlockingChannel,
+        method: Basic.Deliver,
+        properties: BasicProperties,
+        body: bytes,
     ) -> None:
         data: dict = json.loads(body)
         print(f"consumed msg: {data}")

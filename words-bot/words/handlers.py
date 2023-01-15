@@ -13,7 +13,7 @@ async def start_handler(event: types.Message) -> None:
 
 
 async def get_word(event: types.Message) -> None:
-    data = json.dumps(dict(original=event.text))
+    data = json.dumps({"original": event.text})
     await pubsub.publish(data)
     await event.answer("Перевожу...")
 

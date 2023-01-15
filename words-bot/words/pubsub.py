@@ -1,6 +1,6 @@
 import aio_pika
 
-from words.utils.config import RabbitConfig, Config
+from words.utils.config import Config, RabbitConfig
 
 
 class PubSub:

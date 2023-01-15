@@ -16,10 +16,7 @@ class RabbitConfig:
     routing_key: str = ""
 
     def build_url(self) -> str:
-        if self.username:
-            credentials = f"{self.username}:{self.password}@"
-        else:
-            credentials = ""
+        credentials = f"{self.username}:{self.password}@" if self.username else ""
         return os.environ.get(
             "RABBIT_URL",
             f"{self.schema}{credentials}{self.host}:{self.port}",
@@ -49,7 +46,7 @@ class Config:
 
 
 def _load_yaml(filename: str | pathlib.Path) -> dict:
-    with open(filename, "r", encoding="utf-8") as f:
+    with open(filename, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
