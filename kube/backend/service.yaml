@@ -5,6 +5,7 @@ metadata:
   labels:
     component: backend
 spec:
+  type: NodePort
   selector:
     component: backend
   ports:

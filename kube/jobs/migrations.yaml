@@ -1,45 +1,21 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: backend
+  name: backend-migrations
   labels:
-    component: backend
+    component: backend-migrations
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      component: backend
   template:
     metadata:
-      name: backend
+      name: backend-migrations
       labels:
-        component: backend
+        component: backend-migrations
     spec:
+      restartPolicy: Never
       containers:
-        - name: backend
+        - name: backend-migrations
           image: ipakeev/words-backend:dev
-          ports:
-            - containerPort: 8000
-              name: backend
           env:
-            - name: RABBIT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq
-                  key: RABBITMQ_DEFAULT_USER
-            - name: RABBIT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq
-                  key: RABBITMQ_DEFAULT_PASS
-            - name: RABBIT_HOST
-              value: rabbitmq
-            - name: RABBIT_PORT
-              value: "5672"
-            - name: RABBIT_EXCHANGE
-              value: words
-            - name: RABBIT_ROUTING_KEY
-              value: english
             - name: POSTGRES_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -59,8 +35,10 @@ spec:
                 secretKeyRef:
                   name: postgres
                   key: POSTGRES_DB
-            - name: PYTHONUNBUFFERED
-              value: "1"
+          command:
+            - python
+            - manage.py
+            - migrate
           volumeMounts:
             - mountPath: /app/backend
               name: backend-code

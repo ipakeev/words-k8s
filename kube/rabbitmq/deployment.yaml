@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: rabbitmq
-          image: rabbitmq:3.11.6
+          image: rabbitmq:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5672
@@ -25,11 +25,11 @@ spec:
           envFrom:
             - secretRef:
                 name: rabbitmq
-          resources:
-            requests:
-              cpu: 200m
-              memory: 32Mi
-            limits:
-              cpu: 500m
-              memory: 128Mi
+#          resources:
+#            requests:
+#              cpu: 200m
+#              memory: 32Mi
+#            limits:
+#              cpu: 500m
+#              memory: 128Mi
 

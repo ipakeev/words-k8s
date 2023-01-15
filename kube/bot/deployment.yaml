@@ -5,6 +5,9 @@ metadata:
   labels:
     component: bot
 spec:
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       component: bot
@@ -39,11 +42,13 @@ spec:
             - name: RABBIT_HOST
               value: rabbitmq
             - name: RABBIT_PORT
-              value: rabbitmq
+              value: "5672"
             - name: RABBIT_EXCHANGE
               value: words
             - name: RABBIT_ROUTING_KEY
               value: english
+            - name: PYTHONUNBUFFERED
+              value: "1"
           volumeMounts:
             - mountPath: /app/bot
               name: bot-code

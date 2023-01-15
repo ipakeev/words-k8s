@@ -1,26 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: backend-queue-handler
   labels:
-    component: backend
+    component: backend-queue-handler
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      component: backend
+      component: backend-queue-handler
   template:
     metadata:
-      name: backend
+      name: backend-queue-handler
       labels:
-        component: backend
+        component: backend-queue-handler
     spec:
       containers:
-        - name: backend
+        - name: backend-queue-handler
           image: ipakeev/words-backend:dev
-          ports:
-            - containerPort: 8000
-              name: backend
           env:
             - name: RABBIT_USERNAME
               valueFrom:
@@ -61,6 +60,10 @@ spec:
                   key: POSTGRES_DB
             - name: PYTHONUNBUFFERED
               value: "1"
+          command:
+            - python
+            - manage.py
+            - get_words_from_bot
           volumeMounts:
             - mountPath: /app/backend
               name: backend-code
