@@ -37,7 +37,7 @@ class Config:
     rabbit: RabbitConfig
 
     def __init__(self, config: dict) -> None:
-        self.bot = BotConfig(**config.get("bot", {}))
+        self.bot = BotConfig(**config.get("words-bot", {}))
         self.rabbit = RabbitConfig(**config.get("rabbit", {}))
 
 

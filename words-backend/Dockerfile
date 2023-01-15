@@ -1,6 +1,9 @@
 FROM python:3.10-alpine
-WORKDIR /app
+ENV PYTHONBUFFERED=1
+
+WORKDIR /app/backend
 COPY requirements.txt requirements.txt
 RUN pip install -U pip && pip install -r requirements.txt
 COPY . .
-CMD ["python", "main.py"]
+
+CMD ["python", "manage.py", "runserver"]
