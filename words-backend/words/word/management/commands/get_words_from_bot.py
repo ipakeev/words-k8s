@@ -12,19 +12,18 @@ from words.word.models import Word
 
 class Command(BaseCommand):
     help = "Store new words to the database."
-    config = CONFIG.rabbit
 
     def handle(self, *args: Any, **kwargs: Any) -> None:
-        parameters = pika.URLParameters(self.config.build_url())
+        parameters = pika.URLParameters(CONFIG.rabbit.url)
         connection = pika.BlockingConnection(parameters)
         channel = connection.channel()
-        channel.exchange_declare(self.config.exchange)
+        channel.exchange_declare(CONFIG.rabbit.exchange)
         result = channel.queue_declare("")
         queue_name = result.method.queue
         channel.queue_bind(
             queue_name,
-            self.config.exchange,
-            routing_key=self.config.routing_key,
+            CONFIG.rabbit.exchange,
+            routing_key=CONFIG.rabbit.routing_key,
         )
         consumer_tag = channel.basic_consume(
             queue=queue_name,

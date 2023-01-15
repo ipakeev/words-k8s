@@ -8,7 +8,7 @@ class PubSub:
         self.config = config
 
     async def connect(self) -> None:
-        self.connection = await aio_pika.connect(self.config.build_url())
+        self.connection = await aio_pika.connect(self.config.url)
         self.channel = await self.connection.channel()
         self.exchange = await self.channel.declare_exchange(self.config.exchange)
         print("connected")

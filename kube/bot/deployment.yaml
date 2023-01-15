@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot
+  labels:
+    component: bot
+spec:
+  selector:
+    matchLabels:
+      component: bot
+  template:
+    metadata:
+      name: bot
+      labels:
+        component: bot
+    spec:
+      containers:
+        - name: bot
+          image: ipakeev/words-bot:dev
+          ports:
+            - containerPort: 80
+              name: bot
+          env:
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bot
+                  key: BOT_TOKEN
+            - name: RABBIT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq
+                  key: RABBITMQ_DEFAULT_USER
+            - name: RABBIT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq
+                  key: RABBITMQ_DEFAULT_PASS
+            - name: RABBIT_HOST
+              value: rabbitmq
+            - name: RABBIT_PORT
+              value: rabbitmq
+            - name: RABBIT_EXCHANGE
+              value: words
+            - name: RABBIT_ROUTING_KEY
+              value: english
+          volumeMounts:
+            - mountPath: /app/bot
+              name: bot-code
+      volumes:
+        - name: bot-code
+          hostPath:
+            path: /dev/words/bot

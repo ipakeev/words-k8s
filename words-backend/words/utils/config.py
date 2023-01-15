@@ -1,38 +1,30 @@
 import os
-import pathlib
 from dataclasses import dataclass
 
-import yaml
 
-
-@dataclass(frozen=True)
+@dataclass
 class RabbitConfig:
-    schema: str = "amqp://"
-    username: str = ""
-    password: str = ""
-    host: str = ""
-    port: int = 5672
-    exchange: str = ""
-    routing_key: str = ""
+    schema: str = os.environ.get("RABBIT_SCHEMA", "amqp://")
+    username: str = os.environ.get("RABBIT_USERNAME", "")
+    password: str = os.environ.get("RABBIT_PASSWORD", "")
+    host: str = os.environ.get("RABBIT_HOST", "localhost")
+    port: int = os.environ.get("RABBIT_PORT", 5672)
+    exchange: str = os.environ.get("RABBIT_EXCHANGE", "")
+    routing_key: str = os.environ.get("RABBIT_ROUTING_KEY", "")
 
-    def build_url(self) -> str:
+    @property
+    def url(self) -> str:
         credentials = f"{self.username}:{self.password}@" if self.username else ""
-        return os.environ.get(
-            "RABBIT_URL",
-            f"{self.schema}{credentials}{self.host}:{self.port}",
-        )
+        return f"{self.schema}{credentials}{self.host}:{self.port}"
 
 
-@dataclass(frozen=True)
+@dataclass
 class PostgresConfig:
-    username: str = ""
-    password: str = ""
-    host: str = ""
-    port: int = 5432
-    db: str = ""
-
-    def build_url(self) -> str:
-        pass
+    username: str = os.environ.get("POSTGRES_USERNAME", "")
+    password: str = os.environ.get("POSTGRES_PASSWORD", "")
+    host: str = os.environ.get("POSTGRES_HOST", "localhost")
+    port: int = os.environ.get("POSTGRES_PORT", 5432)
+    db: str = os.environ.get("POSTGRES_DB", "")
 
 
 @dataclass(init=False)
@@ -40,22 +32,10 @@ class Config:
     rabbit: RabbitConfig
     postgres: PostgresConfig
 
-    def __init__(self, config: dict) -> None:
-        self.rabbit = RabbitConfig(**config.get("rabbit", {}))
-        self.postgres = PostgresConfig(**config.get("postgres", {}))
+    def __init__(self) -> None:
+        self.rabbit = RabbitConfig()
+        self.postgres = PostgresConfig()
 
 
-def _load_yaml(filename: str | pathlib.Path) -> dict:
-    with open(filename, encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-def load_config(filename: str | pathlib.Path | None = None) -> Config:
-    if filename is None:
-        try:
-            config = _load_yaml("etc/local.yml")
-        except FileNotFoundError:
-            config = _load_yaml("config/config.yml")
-    else:
-        config = _load_yaml(filename)
-    return Config(config)
+def load_config() -> Config:
+    return Config()

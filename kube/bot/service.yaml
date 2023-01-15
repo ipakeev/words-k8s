@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bot
+  labels:
+    component: bot
+spec:
+  selector:
+    component: bot
+  ports:
+    - port: 80
+      targetPort: bot
+      name: bot

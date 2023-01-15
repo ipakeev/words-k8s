@@ -16,8 +16,7 @@ from pathlib import Path
 from words.utils.config import load_config
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
-CONFIG = load_config(BASE_DIR / "etc/local.yml")
+CONFIG = load_config()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/

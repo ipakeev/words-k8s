@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    component: backend
+spec:
+  selector:
+    matchLabels:
+      component: backend
+  template:
+    metadata:
+      name: backend
+      labels:
+        component: backend
+    spec:
+      containers:
+        - name: backend
+          image: ipakeev/words-backend:dev
+          ports:
+            - containerPort: 8000
+              name: backend
+          env:
+            - name: RABBIT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq
+                  key: RABBITMQ_DEFAULT_USER
+            - name: RABBIT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq
+                  key: RABBITMQ_DEFAULT_PASS
+            - name: RABBIT_HOST
+              value: rabbitmq
+            - name: RABBIT_PORT
+              value: rabbitmq
+            - name: RABBIT_EXCHANGE
+              value: words
+            - name: RABBIT_ROUTING_KEY
+              value: english
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: POSTGRES_USERNAME
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: POSTGRES_PORT
+              value: postgres
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: POSTGRES_DB
+          volumeMounts:
+            - mountPath: /app/backend
+              name: backend-code
+      volumes:
+        - name: backend-code
+          hostPath:
+            path: /dev/words/backend
