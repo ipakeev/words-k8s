@@ -1,11 +1,16 @@
 import aio_pika
+from aio_pika.abc import AbstractConnection, AbstractChannel, AbstractExchange
 
-from words.utils.config import Config, RabbitConfig
+from words.config import Config
 
 
-class PubSub:
-    def __init__(self, config: RabbitConfig):
-        self.config = config
+class Rabbit:
+    connection: AbstractConnection
+    channel: AbstractChannel
+    exchange: AbstractExchange
+
+    def __init__(self, config: Config):
+        self.config = config.rabbit
 
     async def connect(self) -> None:
         self.connection = await aio_pika.connect(self.config.url)
@@ -24,11 +29,3 @@ class PubSub:
             routing_key=self.config.routing_key,
         )
         print(f"published msg: {data}")
-
-
-pubsub: PubSub
-
-
-def init_pubsub(config: Config) -> None:
-    global pubsub
-    pubsub = PubSub(config.rabbit)

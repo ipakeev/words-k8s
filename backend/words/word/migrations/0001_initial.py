@@ -7,20 +7,32 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Word',
+            name="Word",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('original', models.CharField(max_length=128, verbose_name='Оригинал')),
-                ('translation', models.CharField(blank=True, default='', max_length=128, verbose_name='Перевод')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("original", models.CharField(max_length=128, verbose_name="Оригинал")),
+                (
+                    "translation",
+                    models.CharField(
+                        blank=True, default="", max_length=128, verbose_name="Перевод"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Слово',
-                'verbose_name_plural': 'Слова',
+                "verbose_name": "Слово",
+                "verbose_name_plural": "Слова",
             },
         ),
     ]

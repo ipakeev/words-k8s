@@ -1,6 +1,8 @@
 import os
 from dataclasses import dataclass
 
+from dotenv import load_dotenv
+
 
 @dataclass
 class BotConfig:
@@ -13,7 +15,7 @@ class RabbitConfig:
     username: str = os.environ.get("RABBIT_USERNAME", "")
     password: str = os.environ.get("RABBIT_PASSWORD", "")
     host: str = os.environ.get("RABBIT_HOST", "localhost")
-    port: int = os.environ.get("RABBIT_PORT", 5672)
+    port: str = os.environ.get("RABBIT_PORT", "5672")
     exchange: str = os.environ.get("RABBIT_EXCHANGE", "")
     routing_key: str = os.environ.get("RABBIT_ROUTING_KEY", "")
 
@@ -33,5 +35,6 @@ class Config:
         self.rabbit = RabbitConfig()
 
 
-def load_config() -> Config:
+def load_config(config_file: str) -> Config:
+    load_dotenv(config_file)
     return Config()

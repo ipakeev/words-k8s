@@ -2,7 +2,12 @@ import json
 
 from aiogram import Dispatcher, types
 
-from words.pubsub import pubsub
+from words.accessor import accessor
+
+
+def register_handlers(dp: Dispatcher) -> None:
+    dp.register_message_handler(start_handler, commands=["start"])
+    dp.register_message_handler(get_word)
 
 
 async def start_handler(event: types.Message) -> None:
@@ -14,10 +19,5 @@ async def start_handler(event: types.Message) -> None:
 
 async def get_word(event: types.Message) -> None:
     data = json.dumps({"original": event.text})
-    await pubsub.publish(data)
+    await accessor.rabbit.publish(data)
     await event.answer("Перевожу...")
-
-
-def register_handlers(dp: Dispatcher) -> None:
-    dp.register_message_handler(start_handler, commands=["start"])
-    dp.register_message_handler(get_word)
