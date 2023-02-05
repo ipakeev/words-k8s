@@ -2,7 +2,6 @@ import asyncio
 import os
 
 from aiogram import executor
-
 from words.accessor import accessor
 from words.config import load_config
 

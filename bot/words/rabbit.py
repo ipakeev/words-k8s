@@ -1,5 +1,5 @@
 import aio_pika
-from aio_pika.abc import AbstractConnection, AbstractChannel, AbstractExchange
+from aio_pika.abc import AbstractChannel, AbstractConnection, AbstractExchange
 
 from words.config import Config
 
