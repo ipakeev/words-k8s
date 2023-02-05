@@ -1,3 +1,2 @@
 /venv/
-/words-bot/.ruff_cache/
-/words-backend/.ruff_cache/
+*/.ruff_cache/
