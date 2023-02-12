@@ -16,9 +16,10 @@ class RabbitConfig:
     password: str = os.environ.get("RABBIT_PASSWORD", "")
     host: str = os.environ.get("RABBIT_HOST", "localhost")
     port: str = os.environ.get("RABBIT_PORT", "5672")
-    publish_exchange: str = os.environ.get("RABBIT_PUBLISH_EXCHANGE", "")
+    queue: str = os.environ.get("RABBIT_QUEUE", "")
+    exchange: str = os.environ.get("RABBIT_EXCHANGE", "")
     publish_routing_key: str = os.environ.get("RABBIT_PUBLISH_ROUTING_KEY", "")
-    consume_queue: str = os.environ.get("RABBIT_CONSUME_QUEUE", "")
+    consume_routing_key: str = os.environ.get("RABBIT_CONSUME_ROUTING_KEY", "")
 
     @property
     def url(self) -> str:

@@ -1,0 +1,20 @@
+{{- range $deploymentName, $deployment := .Values.deployments }}
+{{- $instanceName := printf "%s-%s" (include "words_k8s.fullname" $) $deploymentName }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $instanceName }}
+  labels:
+    app.kubernetes.io/name: {{ $instanceName }}
+    {{- include "words_k8s.labels" $ | nindent 4 }}
+spec:
+  type: {{ $deployment.service.type }}
+  ports:
+    - port: {{ $deployment.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "words_k8s.selectorLabels" $ | nindent 4 }}
+---
+{{ end }}

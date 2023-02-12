@@ -1,0 +1,16 @@
+{{- $instanceName := printf "%s-%s" (include "words_k8s.fullname" $) "backend" }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ $instanceName }}-test-connection"
+  labels:
+    {{- include "words_k8s.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ $instanceName }}:{{ .Values.deployments.backend.service.port }}']
+  restartPolicy: Never

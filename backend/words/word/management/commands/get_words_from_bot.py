@@ -25,16 +25,14 @@ class Command(BaseCommand):
         parameters = pika.URLParameters(self.broker_url)
         connection = pika.BlockingConnection(parameters)
         channel = connection.channel()
-        channel.exchange_declare(settings.RABBIT_EXCHANGE)
-        result = channel.queue_declare("")
-        queue_name = result.method.queue
+        channel.queue_declare(settings.RABBIT_QUEUE)
         channel.queue_bind(
-            queue_name,
-            settings.RABBIT_EXCHANGE,
+            queue=settings.RABBIT_QUEUE,
+            exchange=settings.RABBIT_EXCHANGE,
             routing_key=settings.RABBIT_ROUTING_KEY,
         )
         consumer_tag = channel.basic_consume(
-            queue=queue_name,
+            queue=settings.RABBIT_QUEUE,
             on_message_callback=self.on_message_callback,
         )
 
@@ -47,8 +45,8 @@ class Command(BaseCommand):
         finally:
             connection.close()
 
-    @staticmethod
     def on_message_callback(
+        self,
         channel: BlockingChannel,
         method: Basic.Deliver,
         properties: BasicProperties,
@@ -58,3 +56,6 @@ class Command(BaseCommand):
         print(f"consumed msg: {data}")
         Word.objects.create(original=data["original"])
         channel.basic_ack(delivery_tag=method.delivery_tag)
+
+    def notify_word_created(self) -> None:
+        pass
